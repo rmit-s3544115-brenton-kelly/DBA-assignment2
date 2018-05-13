@@ -57,24 +57,33 @@ public class hashload implements dbimpl
       BufferedReader br = null;
       FileOutputStream fos = null;
 
-      byte[] BUCKET = new byte[BUCKET_SIZE];                    								
+      byte[] bucket = new byte[BUCKET_SIZE];
+      byte[] record = new byte[BUCKET_INDEX_SIZE + BUCKET_OFFSET_SIZE];
+
 
       try{
+
             fos = new FileOutputStream(hashfileStructure);
-// replace 3 with bucket_quantity
-            for(int i = 1; i <= 3; i++)
+
+
+
+	    // Put the empty record indicator to the head of record.
+	    String dataString = EMPTY_RECORD_INDICATOR;
+	    byte[] emptyRecHead = dataString.trim().getBytes(ENCODING);
+	    System.arraycopy(emptyRecHead, 0, record, 0, emptyRecHead.length);
+	
+	    System.out.println("emptyRecordHeader = " + Arrays.toString(emptyRecHead));
+
+
+
+	    // replace 3 with bucket_quantity when finished testing small size
+            for(int i = 1; i <= 3*((BUCKET_INDEX_SIZE + BUCKET_OFFSET_SIZE) * RECORDS_PER_BUCKET); i++)
 	    {
-	        fos.write(BUCKET);
+	        fos.write(record);
 	    }
 
 	    // test writing to file
-	    byte[] DATA = new byte[BUCKET_INDEX_SIZE + BUCKET_OFFSET_SIZE];
-	    String dataString = "test";
-	    byte[] DATA_SRC = dataString.trim().getBytes(ENCODING);
-	 
-            System.arraycopy(DATA_SRC, 0, DATA, 0, DATA_SRC.length);
-	
-	    System.out.println("DATA = " + Arrays.toString(DATA));
+
 
 	    fos.close();
 
@@ -105,7 +114,7 @@ public class hashload implements dbimpl
 		    fis.read(bBucket, 0, bBucket.length);
 		    for(int i = 1; i<=5; i++)
 		    {
-		        fos.write(DATA, 0, DATA.length);
+		        //fos.write(DATA, 0, DATA.length);
 		    }
 		    bucketCount++;
 		}

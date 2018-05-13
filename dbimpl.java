@@ -15,6 +15,11 @@ public interface dbimpl
    public static final int BUCKET_INDEX_SIZE = 6;
    // Size of the offset value for Heap File.
    public static final int BUCKET_OFFSET_SIZE = 14;
+   // 
+   public static final String EMPTY_RECORD_INDICATOR = "E";
+
+   //
+   public static final int RECORDS_PER_BUCKET = 5;
 
 
    public static final String HEAP_FNAME = "heap.";
