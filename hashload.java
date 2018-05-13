@@ -18,6 +18,15 @@ import java.io.FileInputStream;
 
 public class hashload implements dbimpl
 {
+   // Quantity of buckets used to store records.
+   public static final int BUCKET_QUANTITY = 400000;
+   // Size of each bucket
+   public static final int BUCKET_SIZE = 100;
+   // Size of each index obtained from hashing.
+   public static final int BUCKET_INDEX_SIZE = 6;
+   // Size of the offset value for Heap File.
+   public static final int BUCKET_OFFSET_SIZE = 14;
+
    // initialize
    public static void main(String args[])
    {
@@ -74,6 +83,13 @@ public class hashload implements dbimpl
       int rid = 0;
       boolean isNextPage = true;
       boolean isNextRecord = true;
+
+      // Variables I have added to dbquery.java - readHeap()
+      
+      // Stores the record's heapfile offset.
+      int recOffset = 0;
+      int hashOffset = 0;
+
       try
       {
          FileInputStream fis = new FileInputStream(heapfile);
@@ -102,7 +118,13 @@ public class hashload implements dbimpl
                   }
                   else
                   {
-                     hashRecord(bRecord, name);
+		     // Get the hash offset for the record
+                     hashOffset = hashRecord(bRecord, name);
+
+		     // Calculate the HeapFileOffset of the record.
+	             recOffset = pageCount * RECORD_SIZE;          
+		     // TODO: Store the hashOffset with the Heap File offset.
+
                      recordLen += RECORD_SIZE;
                   }
                   recCount++;
@@ -121,6 +143,7 @@ public class hashload implements dbimpl
             {
                isNextPage = false;
             }
+
             pageCount++;
          }
       }
@@ -135,10 +158,22 @@ public class hashload implements dbimpl
    }
 
    // returns records containing the argument text from shell
-   public void hashRecord(byte[] rec, String input)
+   public int hashRecord(byte[] rec, String input)
    {
-	// TODO: Implement hashRecord.
+      int bucketIndex = -1;
+      int hashOffset = 0;
       String record = new String(rec);
-      System.out.println("TODO: implement hashing method");	
+      // Get the BN_NAME for the record as we will be indexing by this.
+      String BN_NAME = record
+			.substring(RID_SIZE+REGISTER_NAME_SIZE,
+			RID_SIZE+REGISTER_NAME_SIZE+BN_NAME_SIZE);
+
+      // Hashes BN_NAME and limits the index to the quantity of buckets.
+      bucketIndex = Math.abs(BN_NAME.hashCode()) % BUCKET_QUANTITY;
+ 
+      // Get Hash File Offset for where it should be stored.
+      hashOffset = bucketIndex * BUCKET_SIZE;
+
+      return hashOffset;
    }
 }
