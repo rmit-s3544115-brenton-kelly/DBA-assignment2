@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
 
 /**
  *  Database Systems - HASH IMPLEMENTATION
@@ -39,6 +41,7 @@ public class hashload implements dbimpl
       {
          if (isInteger(args[1]))
          {
+	    createHashFileStructure(Integer.parseInt(args[1]));
             readHeap(args[0], Integer.parseInt(args[1]));
          }
       }
@@ -47,6 +50,30 @@ public class hashload implements dbimpl
           System.out.println("Error: only pass in two arguments");
       }
    }
+
+   // Create the empty hash file structure and save to file.
+   public void createHashFileStructure(int pagesize){
+      File hashfile = new File(HASH_FNAME + pagesize);
+      BufferedReader br = null;
+      FileOutputStream fos = null;
+
+      byte[] BUCKET = new byte[BUCKET_SIZE];                    								
+
+      try{
+            fos = new FileOutputStream(hashfile);
+            for(int i = 1; i <= BUCKET_QUANTITY; i++)
+	    {
+	        fos.write(BUCKET);
+	    }
+	System.out.println("Completed");
+      }
+      catch (Exception e)
+      {
+            e.printStackTrace();
+      }
+
+   }
+								
 
    // check if pagesize is a valid integer
    public boolean isInteger(String s)
