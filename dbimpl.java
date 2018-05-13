@@ -15,13 +15,25 @@ public interface dbimpl
    public static final int BUCKET_INDEX_SIZE = 6;
    // Size of the offset value for Heap File.
    public static final int BUCKET_OFFSET_SIZE = 14;
-   // 
-   public static final String EMPTY_RECORD_INDICATOR = "E";
+
+   public static final int BUCKET_RECORD_SIZE = BUCKET_INDEX_SIZE + BUCKET_OFFSET_SIZE;
 
    //
    public static final int RECORDS_PER_BUCKET = 5;
 
+   public static final String EMPTY_RECORD_SYMBOL = "E";
+	
+   public static final String RECORD_SPACER =  new String(new char[BUCKET_RECORD_SIZE]).replace("\0", " ");
+   RECORD_SPACER = EMPTY_RECORD_SYMBOL + RECORD_SPACER;
+   System.out.println("WE HERE!!");
+   for(int i = 1; i <= RECORDS_PER_BUCKET;i++)
+   {
+      RECORD_SPACER = RECORD_SPACER + RECORD_SPACER; 
+   }
+   // 
+   public static final String EMPTY_RECORD_INDICATOR = RECORD_SPACER;
 
+ 
    public static final String HEAP_FNAME = "heap.";
    public static final String ENCODING = "utf-8";
 

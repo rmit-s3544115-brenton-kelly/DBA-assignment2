@@ -69,17 +69,19 @@ public class hashload implements dbimpl
 
 	    // Put the empty record indicator to the head of record.
 	    String dataString = EMPTY_RECORD_INDICATOR;
+		System.out.println("dataString = i" + dataString);
 	    byte[] emptyRecHead = dataString.trim().getBytes(ENCODING);
-	    System.arraycopy(emptyRecHead, 0, record, 0, emptyRecHead.length);
+	    System.arraycopy(emptyRecHead, 0, bucket, 0, emptyRecHead.length);
 	
 	    System.out.println("emptyRecordHeader = " + Arrays.toString(emptyRecHead));
 
 
 
+System.out.println(Arrays.toString(record));
 	    // replace 3 with bucket_quantity when finished testing small size
-            for(int i = 1; i <= 3*((BUCKET_INDEX_SIZE + BUCKET_OFFSET_SIZE) * RECORDS_PER_BUCKET); i++)
+            for(int i = 1; i <= 1000; i++)
 	    {
-	        fos.write(record);
+	        fos.write(bucket);
 	    }
 
 	    // test writing to file
