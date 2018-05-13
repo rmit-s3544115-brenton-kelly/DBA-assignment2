@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
-
+import java.util.Arrays;
 /**
  *  Database Systems - HASH IMPLEMENTATION
  *  
@@ -53,17 +53,69 @@ public class hashload implements dbimpl
 
    // Create the empty hash file structure and save to file.
    public void createHashFileStructure(int pagesize){
-      File hashfile = new File(HASH_FNAME + pagesize);
+      File hashfileStructure = new File(HASH_FNAME + pagesize + ".structure");
       BufferedReader br = null;
       FileOutputStream fos = null;
 
       byte[] BUCKET = new byte[BUCKET_SIZE];                    								
 
       try{
-            fos = new FileOutputStream(hashfile);
-            for(int i = 1; i <= BUCKET_QUANTITY; i++)
+            fos = new FileOutputStream(hashfileStructure);
+// replace 3 with bucket_quantity
+            for(int i = 1; i <= 3; i++)
 	    {
 	        fos.write(BUCKET);
+	    }
+
+	    // test writing to file
+	    byte[] DATA = new byte[BUCKET_INDEX_SIZE + BUCKET_OFFSET_SIZE];
+	    String dataString = "test";
+	    byte[] DATA_SRC = dataString.trim().getBytes(ENCODING);
+	 
+            System.arraycopy(DATA_SRC, 0, DATA, 0, DATA_SRC.length);
+	
+	    System.out.println("DATA = " + Arrays.toString(DATA));
+
+	    fos.close();
+
+	    byte[] bBucket = new byte[BUCKET_SIZE];
+	    byte[] bRecord = new byte[BUCKET_INDEX_SIZE + BUCKET_OFFSET_SIZE];
+
+	    FileInputStream fis = new FileInputStream(hashfileStructure);
+
+	    File hashfile = new File(HASH_FNAME + pagesize);
+	    fos = new FileOutputStream(hashfile);
+
+
+	    // Read bucket by bucket until we reach desired bucket.
+	    boolean isNextBucket = true;
+	    int bucketCount = 1;
+	    int desiredBucket = 2;
+
+	    while(isNextBucket)
+	    {
+		if((bucketCount) * BUCKET_SIZE == 300)
+		{
+		    System.out.println("last bucket");
+		    isNextBucket = false;
+		}
+		if(bucketCount == desiredBucket)
+		{
+		    // Read record and check if empty. Just scrapping it now for testing.
+		    fis.read(bBucket, 0, bBucket.length);
+		    for(int i = 1; i<=5; i++)
+		    {
+		        fos.write(DATA, 0, DATA.length);
+		    }
+		    bucketCount++;
+		}
+		else
+		{
+		    fis.read(bBucket, 0, bBucket.length);
+		    fos.write(bBucket, 0, bBucket.length);
+		    System.out.println("bucketCount = " + bucketCount + " Current stream = " + Arrays.toString(bBucket));
+		    bucketCount ++;
+		}
 	    }
 	System.out.println("Completed");
       }
