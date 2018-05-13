@@ -18,14 +18,6 @@ import java.io.FileInputStream;
 
 public class hashload implements dbimpl
 {
-   // Quantity of buckets used to store records.
-   public static final int BUCKET_QUANTITY = 400000;
-   // Size of each bucket
-   public static final int BUCKET_SIZE = 100;
-   // Size of each index obtained from hashing.
-   public static final int BUCKET_INDEX_SIZE = 6;
-   // Size of the offset value for Heap File.
-   public static final int BUCKET_OFFSET_SIZE = 14;
 
    // initialize
    public static void main(String args[])
