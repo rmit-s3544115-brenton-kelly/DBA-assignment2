@@ -102,6 +102,10 @@ public class hashload implements dbimpl
 
 	    byte[] bBucket = new byte[BUCKET_SIZE];
 	    byte[] bRecord = new byte[BUCKET_RECORD_SIZE];
+	    testRecordString = "5555558888888888";
+	    byte[] testRecord = new byte[BUCKET_RECORD_SIZE];
+	    byte[] testRecordData = testRecordString.getBytes(ENCODING);
+	    System.arraycopy(testRecordData, 0, testRecord, 0, testRecordData.length);
 
 	    FileInputStream fis = new FileInputStream(hashfileStructure);
 
@@ -124,11 +128,10 @@ public class hashload implements dbimpl
 		if(bucketCount == hashIndex)
 		{
 		    // Read record and check if empty. Just scrapping it now for testing.
-		    fis.read(bBucket, 0, bBucket.length);
-		    for(int i = 1; i<=5; i++)
-		    {
-		       // fos.write(DATA, 0, DATA.length);
-		    }
+		    fis.read(bRecord, 0, bRecord.length);
+		   	    
+		    fos.write(testRecord, 0, testRecord.length);
+		    
 		    bucketCount++;
 		}
 		else
@@ -213,6 +216,8 @@ public class hashload implements dbimpl
 		     // Get the hash offset for the record
                      hashOffset = hashRecord(bRecord, name);
 
+                     storeRecordInHash(bRecord, hashOffset);
+
 		     // Calculate the HeapFileOffset of the record.
 	             recOffset = pageCount * RECORD_SIZE;          
 		     // TODO: Store the hashOffset with the Heap File offset.
@@ -267,5 +272,10 @@ public class hashload implements dbimpl
       hashOffset = bucketIndex * BUCKET_SIZE;
 
       return hashOffset;
+   }
+
+   public void storeRecordInHash(byte[] bRecord, int hashOffset)
+   {
+      
    }
 }
