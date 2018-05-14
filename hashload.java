@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 public class hashload implements dbimpl
 {
+boolean exit = false;
    // initialize
    public static void main(String args[])
    {
@@ -239,6 +240,8 @@ public class hashload implements dbimpl
    {
       File hashfileStructure = new File(HASH_FNAME + pagesize + ".structure");
 	File hashfile = new File(HASH_FNAME + pagesize);
+	File hashfile2 = new File(HASH_FNAME + pagesize + "2");
+
 	//fos2 = new FileOutputStream(hashfile);
       BufferedReader br = null;
       FileOutputStream fos = null;
@@ -311,8 +314,21 @@ public class hashload implements dbimpl
 		  if(tempString.charAt(0) == 'F')
 		  {
 		      System.out.println("record not empty, add going to next one");
+			fos.write(bRecord, 0, bRecord.length);
+			if(i == RECORDS_PER_BUCKET && inserted == false)
+			{
+			   if(bucketCount == BUCKET_QUANTITY)
+			   {
+				isNextBucket = false;
+				break;
+			   {
+			   bucketCount++;
+			   i = 0;
+				
+			}
 		  }
 	       }
+
 	       bucketCount++;
 	   }
 	   else
@@ -322,21 +338,23 @@ public class hashload implements dbimpl
 	       bucketCount ++;
 	   }
        }
-	
+fis.close();
+fos.close();	
 	// Write data back into hash structure.
-	fis2 = new FileInputStream(hashfileStructure);
-	fos2 = new FileOutputStream(hashfile);
+	fis2 = new FileInputStream(hashfile);
+	fos2 = new FileOutputStream(hashfileStructure);
 	byte[] writeToStructure = new byte[BUCKET_SIZE];
-	isNextBucket = true;
+
 
 	   for(int i = 0; i<= BUCKET_QUANTITY; i++)
 	   {	
 		fis2.read(writeToStructure, 0, writeToStructure.length);
 
-		System.out.println("hope this works" + new String(writeToStructure));
+		//System.out.println("writeToStructure = " + new String(writeToStructure));
 		fos2.write(writeToStructure, 0, writeToStructure.length);
 	   }
-	
+//System.exit(0);
+
 
      //  System.out.println("Completed");
        }
