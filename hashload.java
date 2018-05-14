@@ -230,7 +230,7 @@ public class hashload implements dbimpl
       // Hashes BN_NAME and limits the index to the quantity of buckets.
       bucketIndex = Math.abs(BN_NAME.hashCode()) % BUCKET_QUANTITY;
 
-      return bucketIndex = 1;
+      return bucketIndex = 2;
 
    }
 
@@ -240,14 +240,26 @@ public class hashload implements dbimpl
       BufferedReader br = null;
       FileOutputStream fos = null;
       String tempString = "";
-//	System.out.println("bRecord = " + Arrays.toString(record));
+	System.out.println("recOffset = " + recOffset);
 
       try{
        byte[] bBucket = new byte[BUCKET_SIZE];
        byte[] bRecord = new byte[BUCKET_RECORD_SIZE];
-       String storeString = Integer.toString(recOffset) + Integer.toString(hashOffset);
+//TODO: PAD STRINGS AND APPEND A 'F' AROUND HERE SOMEHWEEHRJEA
+       // Store recOFFset and hashOffset into store String
+       String hashOffsetString = Integer.toString(hashOffset);
+       String recOffsetString = Integer.toString(recOffset);
+	int hashOffsetLength = BUCKET_INDEX_SIZE - hashOffsetString.length;
+       for(int i = 1; i<=hashOffsetLength;i++)
+	{
+		hashOffsetString += " ";
+	}
+       String storeString = hashOffsetString + recOffsetString;
+      
        byte[] record = new byte[BUCKET_RECORD_SIZE];
+       // Put store string into recordData.
        byte[] recordData = storeString.getBytes(ENCODING);
+       // Copy record data into record.
        System.arraycopy(recordData, 0, record, 0, recordData.length);
 
        FileInputStream fis = new FileInputStream(hashfileStructure);
@@ -260,7 +272,7 @@ public class hashload implements dbimpl
        boolean isNextBucket = true;
        int bucketCount = 1;
       // int hashIndex = 2;
-
+	byte[] readRemainder = null;
        while(isNextBucket)
        {
            if(bucketCount == BUCKET_QUANTITY)
@@ -276,11 +288,18 @@ public class hashload implements dbimpl
 
 	          fis.read(bRecord, 0, bRecord.length);
 		  tempString = new String(bRecord);
-		  if(tempString.charAt(0) == 'E'){
-                      System.out.println("Record " + i + " is empty. Inserting!");
-
+		  if(tempString.charAt(0) == 'E')
+		  {
+                      System.out.println("Record " + i + " is empty. Inserting!    bucket size =  " + (BUCKET_SIZE - (BUCKET_RECORD_SIZE*i)));
+		      fos.write(record, 0, record.length);
+		      fis.read(readRemainder = new byte[BUCKET_SIZE - (BUCKET_RECORD_SIZE * i)], 0, readRemainder.length);
+		      fos.write(readRemainder, 0, readRemainder.length);
+		      break;
 		  }
-	          fos.write(record, 0, record.length);
+		  else
+		  {
+		      System.out.println("record not empty, add going to next one");
+		  }
 	       }
 	       bucketCount++;
 	   }
