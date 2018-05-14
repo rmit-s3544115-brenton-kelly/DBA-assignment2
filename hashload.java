@@ -173,10 +173,12 @@ public class hashload implements dbimpl
 		     // Get the hash offset for the record
                      hashOffset = hashRecord(bRecord, name);
 
-                     storeRecordInHash(bRecord, hashOffset, pagesize);
 
 		     // Calculate the HeapFileOffset of the record.
-	             recOffset = pageCount * RECORD_SIZE;          
+	             recOffset = pageCount * RECORD_SIZE;   
+
+                     storeRecordInHash(recOffset, hashOffset, pagesize);
+	       
 		     // TODO: Store the hashOffset with the Heap File offset.
 
                      recordLen += RECORD_SIZE;
@@ -231,20 +233,20 @@ public class hashload implements dbimpl
       return hashOffset;
    }
 
-   public void storeRecordInHash(byte[] record, int hashOffset, int pagesize)
+   public void storeRecordInHash(int recOffset, int hashOffset, int pagesize)
    {
       File hashfileStructure = new File(HASH_FNAME + pagesize + ".structure");
       BufferedReader br = null;
       FileOutputStream fos = null;
-
+//	System.out.println("bRecord = " + Arrays.toString(record));
 
       try{
        byte[] bBucket = new byte[BUCKET_SIZE];
        byte[] bRecord = new byte[BUCKET_RECORD_SIZE];
-       String testRecordString = "5555558888888888";
-       byte[] testRecord = new byte[BUCKET_RECORD_SIZE];
-       byte[] testRecordData = testRecordString.getBytes(ENCODING);
-       System.arraycopy(testRecordData, 0, testRecord, 0, testRecordData.length);
+       String storeString = Integer.toString(recOffset) + Integer.toString(hashOffset);
+       byte[] record = new byte[BUCKET_RECORD_SIZE];
+       byte[] recordData = storeString.getBytes(ENCODING);
+       System.arraycopy(recordData, 0, record, 0, recordData.length);
 
        FileInputStream fis = new FileInputStream(hashfileStructure);
 
@@ -261,7 +263,7 @@ public class hashload implements dbimpl
        {
            if((bucketCount) * BUCKET_SIZE == 300)
 	   {
-	       System.out.println("last bucket");
+	       //System.out.println("last bucket");
 	       isNextBucket = false;
 	   }
 	   if(bucketCount == hashIndex)
@@ -280,7 +282,7 @@ public class hashload implements dbimpl
 	       bucketCount ++;
 	   }
        }
-       System.out.println("Completed");
+     //  System.out.println("Completed");
        }
 	catch(Exception e){}
 
