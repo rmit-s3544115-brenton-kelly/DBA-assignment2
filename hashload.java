@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.util.Arrays;
+import java.util.ArrayList;
 /**
  *  Database Systems - HASH IMPLEMENTATION
  *  
@@ -137,6 +138,8 @@ int exit = 0;
       int rid = 0;
       boolean isNextPage = true;
       boolean isNextRecord = true;
+      List<Integer> recOffsetArray = new ArrayList<Integer>();
+      List<Integer> hashOffsetArray = new ArrayList<Integer>();
 
       // Variables I have added to dbquery.java - readHeap()
       
@@ -181,8 +184,10 @@ int exit = 0;
 
 
 		     // Calculate the HeapFileOffset of the record.
-	             recOffset = recNumber * RECORD_SIZE;   
-//System.out.println("page count " + pageCount);
+	             recOffset = recNumber * RECORD_SIZE;  
+			recOffsetArray.add(recOffset);
+			hashOffsetArray.add(hashOffset);
+			System.out.println("arrays = " + recOffsetArray[0]); 
                      storeRecordInHash(recOffset, hashOffset, pagesize);
 	       
 		     // TODO: Store the hashOffset with the Heap File offset.
