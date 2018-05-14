@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 public class hashload implements dbimpl
 {
-boolean exit = false;
+int exit = 0;
    // initialize
    public static void main(String args[])
    {
@@ -232,7 +232,7 @@ boolean exit = false;
       // Hashes BN_NAME and limits the index to the quantity of buckets.
       bucketIndex = Math.abs(BN_NAME.hashCode()) % BUCKET_QUANTITY;
 
-      return bucketIndex = 1;
+      return bucketIndex;
 
    }
 
@@ -288,7 +288,7 @@ boolean exit = false;
 	byte[] readRemainder = null;
        while(isNextBucket)
        {
-           if(bucketCount == BUCKET_QUANTITY)
+           if(bucketCount +1 == BUCKET_QUANTITY)
 	   {
 	       System.out.println("last bucket");
 	       isNextBucket = false;
@@ -308,7 +308,8 @@ boolean exit = false;
 		      fos.write(record, 0, record.length);
 		      fis.read(readRemainder = new byte[BUCKET_SIZE - (BUCKET_RECORD_SIZE * i)], 0, readRemainder.length);
 		      fos.write(readRemainder, 0, readRemainder.length);
-		      inserted = true;
+		      //inserted = true;
+		      break;
 		      
 		  }
 		  if(tempString.charAt(0) == 'F')
@@ -321,7 +322,7 @@ boolean exit = false;
 			   {
 				isNextBucket = false;
 				break;
-			   {
+			   }
 			   bucketCount++;
 			   i = 0;
 				
@@ -344,17 +345,20 @@ fos.close();
 	fis2 = new FileInputStream(hashfile);
 	fos2 = new FileOutputStream(hashfileStructure);
 	byte[] writeToStructure = new byte[BUCKET_SIZE];
+//TODO CHANGE SO INDEX != 1 anymor
 
-
-	   for(int i = 0; i<= BUCKET_QUANTITY; i++)
+	   for(int i = 1; i<= BUCKET_QUANTITY; i++)
 	   {	
 		fis2.read(writeToStructure, 0, writeToStructure.length);
 
 		//System.out.println("writeToStructure = " + new String(writeToStructure));
 		fos2.write(writeToStructure, 0, writeToStructure.length);
 	   }
-//System.exit(0);
+exit ++;
+if(exit == 25){
 
+System.exit(0);
+}
 
      //  System.out.println("Completed");
        }

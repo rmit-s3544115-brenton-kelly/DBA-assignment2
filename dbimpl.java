@@ -10,7 +10,7 @@ public interface dbimpl
    // Quantity of buckets used to store records.
   // public static final int BUCKET_QUANTITY = 800000;
 
-   public static final int BUCKET_QUANTITY = 10;
+   public static final int BUCKET_QUANTITY = 5;
    // Size of each bucket
    public static final int BUCKET_SIZE = 100;
    // Size of each index obtained from hashing.
