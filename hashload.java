@@ -127,6 +127,7 @@ public class hashload implements dbimpl
    // read heapfile by page
    public void readHeap(String name, int pagesize)
    {
+
       File heapfile = new File(HEAP_FNAME + pagesize);
       int intSize = 4;
       int pageCount = 0;
@@ -144,6 +145,7 @@ public class hashload implements dbimpl
 
       try
       {
+
          FileInputStream fis = new FileInputStream(heapfile);
          // reading page by page
          while (isNextPage)
@@ -154,11 +156,11 @@ public class hashload implements dbimpl
             System.arraycopy(bPage, bPage.length-intSize, bPageNum, 0, intSize);
 
             // reading by record, return true to read the next record
-            recCount = 0;
+            int recNumber = 0;
             isNextRecord = true;
             while (isNextRecord)
             {
-	       recCount ++;
+	       recNumber ++;
                byte[] bRecord = new byte[RECORD_SIZE];
                byte[] bRid = new byte[intSize];
                try
@@ -237,10 +239,10 @@ public class hashload implements dbimpl
       File hashfileStructure = new File(HASH_FNAME + pagesize + ".structure");
       BufferedReader br = null;
       FileOutputStream fos = null;
+      String tempString = "";
 //	System.out.println("bRecord = " + Arrays.toString(record));
 
       try{
-System.out.println("ok we here");
        byte[] bBucket = new byte[BUCKET_SIZE];
        byte[] bRecord = new byte[BUCKET_RECORD_SIZE];
        String storeString = Integer.toString(recOffset) + Integer.toString(hashOffset);
@@ -269,12 +271,17 @@ System.out.println("ok we here");
 	   if(bucketCount == hashOffset)
 	   {
 	       // Read record and check if empty. Just scrapping it now for testing.
-	       for(int i = 1; i<=5; i++){
-                   System.out.println("writing)");
-	       fis.read(bRecord, 0, bRecord.length);
-		   	    
-	       fos.write(record, 0, record.length);
-		    }
+	       for(int i = 1; i<=RECORDS_PER_BUCKET; i++)
+	       {
+
+	          fis.read(bRecord, 0, bRecord.length);
+		  tempString = new String(bRecord);
+		  if(tempString.charAt(0) == 'E'){
+                      System.out.println("Record " + i + " is empty. Inserting!");
+
+		  }
+	          fos.write(record, 0, record.length);
+	       }
 	       bucketCount++;
 	   }
 	   else
