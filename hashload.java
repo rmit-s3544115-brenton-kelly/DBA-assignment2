@@ -87,7 +87,7 @@ public class hashload implements dbimpl
 	
 
 	    // replace 3 with bucket_quantity when finished testing small size
-            for(int i = 1; i <= 3; i++)
+            for(int i = 1; i <= BUCKET_QUANTITY; i++)
 	    {
 	        fos.write(bucket);
 	    }
@@ -154,9 +154,11 @@ public class hashload implements dbimpl
             System.arraycopy(bPage, bPage.length-intSize, bPageNum, 0, intSize);
 
             // reading by record, return true to read the next record
+            recCount = 0;
             isNextRecord = true;
             while (isNextRecord)
             {
+	       recCount ++;
                byte[] bRecord = new byte[RECORD_SIZE];
                byte[] bRid = new byte[intSize];
                try
@@ -175,8 +177,8 @@ public class hashload implements dbimpl
 
 
 		     // Calculate the HeapFileOffset of the record.
-	             recOffset = pageCount * RECORD_SIZE;   
-
+	             recOffset = recCount * RECORD_SIZE;   
+//System.out.println("page count " + pageCount);
                      storeRecordInHash(recOffset, hashOffset, pagesize);
 	       
 		     // TODO: Store the hashOffset with the Heap File offset.
@@ -217,7 +219,6 @@ public class hashload implements dbimpl
    public int hashRecord(byte[] rec, String input)
    {
       int bucketIndex = -1;
-      int hashOffset = 0;
       String record = new String(rec);
       // Get the BN_NAME for the record as we will be indexing by this.
       String BN_NAME = record
@@ -226,11 +227,9 @@ public class hashload implements dbimpl
 
       // Hashes BN_NAME and limits the index to the quantity of buckets.
       bucketIndex = Math.abs(BN_NAME.hashCode()) % BUCKET_QUANTITY;
- 
-      // Get Hash File Offset for where it should be stored.
-      hashOffset = bucketIndex * BUCKET_SIZE;
 
-      return hashOffset;
+      return bucketIndex = 1;
+
    }
 
    public void storeRecordInHash(int recOffset, int hashOffset, int pagesize)
@@ -241,6 +240,7 @@ public class hashload implements dbimpl
 //	System.out.println("bRecord = " + Arrays.toString(record));
 
       try{
+System.out.println("ok we here");
        byte[] bBucket = new byte[BUCKET_SIZE];
        byte[] bRecord = new byte[BUCKET_RECORD_SIZE];
        String storeString = Integer.toString(recOffset) + Integer.toString(hashOffset);
@@ -257,22 +257,24 @@ public class hashload implements dbimpl
        // Read bucket by bucket until we reach desired bucket.
        boolean isNextBucket = true;
        int bucketCount = 1;
-       int hashIndex = 2;
+      // int hashIndex = 2;
 
        while(isNextBucket)
        {
-           if((bucketCount) * BUCKET_SIZE == 300)
+           if(bucketCount == BUCKET_QUANTITY)
 	   {
-	       //System.out.println("last bucket");
+	       System.out.println("last bucket");
 	       isNextBucket = false;
 	   }
-	   if(bucketCount == hashIndex)
+	   if(bucketCount == hashOffset)
 	   {
 	       // Read record and check if empty. Just scrapping it now for testing.
+	       for(int i = 1; i<=5; i++){
+                   System.out.println("writing)");
 	       fis.read(bRecord, 0, bRecord.length);
 		   	    
-	       fos.write(testRecord, 0, testRecord.length);
-		    
+	       fos.write(record, 0, record.length);
+		    }
 	       bucketCount++;
 	   }
 	   else
@@ -285,6 +287,7 @@ public class hashload implements dbimpl
      //  System.out.println("Completed");
        }
 	catch(Exception e){}
+       System.out.println("Finished that record. recOffset was: " + recOffset + " & hashOffset = " + hashOffset );
 
  
    }

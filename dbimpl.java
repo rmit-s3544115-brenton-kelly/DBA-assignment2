@@ -8,7 +8,7 @@ public interface dbimpl
    // Variables I have added:
    public static final String HASH_FNAME = "hash.";
    // Quantity of buckets used to store records.
-   public static final int BUCKET_QUANTITY = 400000;
+   public static final int BUCKET_QUANTITY = 800000;
    // Size of each bucket
    public static final int BUCKET_SIZE = 100;
    // Size of each index obtained from hashing.
