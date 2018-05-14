@@ -69,10 +69,12 @@ public class hashload implements dbimpl
 
 	    // Put the empty record indicator to the head of record.
 	    String recordPadding = "";
+	    // Pad the record until full.
 	    for(int i = 1; i<= BUCKET_RECORD_SIZE-1;i++)
 	    {
 		recordPadding += " ";
 	    }
+	    // Create a string that will fill up a bucket with empty headers.
 	    recordPadding = EMPTY_RECORD_INDICATOR + recordPadding;
 	    String dataString = "";
 	    for(int i = 1; i<= RECORDS_PER_BUCKET; i++)
@@ -84,13 +86,9 @@ public class hashload implements dbimpl
 	    byte[] emptyRecHead = dataString.getBytes(ENCODING);
 	    System.arraycopy(emptyRecHead, 0, bucket, 0, emptyRecHead.length);
 	
-	    //System.out.println("emptyRecordHeader = " + Arrays.toString(emptyRecHead));
 
-
-
-System.out.println(Arrays.toString(record));
 	    // replace 3 with bucket_quantity when finished testing small size
-            for(int i = 1; i <= BUCKET_QUANTITY; i++)
+            for(int i = 1; i <= 3; i++)
 	    {
 	        fos.write(bucket);
 	    }
@@ -99,6 +97,8 @@ System.out.println(Arrays.toString(record));
 
 
 	    fos.close();
+
+
 
 	    byte[] bBucket = new byte[BUCKET_SIZE];
 	    byte[] bRecord = new byte[BUCKET_RECORD_SIZE];
@@ -112,7 +112,7 @@ System.out.println(Arrays.toString(record));
 	    // Read bucket by bucket until we reach desired bucket.
 	    boolean isNextBucket = true;
 	    int bucketCount = 1;
-	    int desiredBucket = 2;
+	    int hashIndex = 2;
 
 	    while(isNextBucket)
 	    {
@@ -121,13 +121,13 @@ System.out.println(Arrays.toString(record));
 		    System.out.println("last bucket");
 		    isNextBucket = false;
 		}
-		if(bucketCount == desiredBucket)
+		if(bucketCount == hashIndex)
 		{
 		    // Read record and check if empty. Just scrapping it now for testing.
 		    fis.read(bBucket, 0, bBucket.length);
 		    for(int i = 1; i<=5; i++)
 		    {
-		        //fos.write(DATA, 0, DATA.length);
+		       // fos.write(DATA, 0, DATA.length);
 		    }
 		    bucketCount++;
 		}
@@ -135,7 +135,6 @@ System.out.println(Arrays.toString(record));
 		{
 		    fis.read(bBucket, 0, bBucket.length);
 		    fos.write(bBucket, 0, bBucket.length);
-		    System.out.println("bucketCount = " + bucketCount + " Current stream = " + Arrays.toString(bBucket));
 		    bucketCount ++;
 		}
 	    }
