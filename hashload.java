@@ -148,6 +148,8 @@ public class hashload implements dbimpl
 
          FileInputStream fis = new FileInputStream(heapfile);
          // reading page by page
+
+            int recNumber = 0;
          while (isNextPage)
          {
             byte[] bPage = new byte[pagesize];
@@ -156,7 +158,6 @@ public class hashload implements dbimpl
             System.arraycopy(bPage, bPage.length-intSize, bPageNum, 0, intSize);
 
             // reading by record, return true to read the next record
-            int recNumber = 0;
             isNextRecord = true;
             while (isNextRecord)
             {
@@ -179,7 +180,7 @@ public class hashload implements dbimpl
 
 
 		     // Calculate the HeapFileOffset of the record.
-	             recOffset = recCount * RECORD_SIZE;   
+	             recOffset = recNumber * RECORD_SIZE;   
 //System.out.println("page count " + pageCount);
                      storeRecordInHash(recOffset, hashOffset, pagesize);
 	       
@@ -230,29 +231,38 @@ public class hashload implements dbimpl
       // Hashes BN_NAME and limits the index to the quantity of buckets.
       bucketIndex = Math.abs(BN_NAME.hashCode()) % BUCKET_QUANTITY;
 
-      return bucketIndex = 2;
+      return bucketIndex = 1;
 
    }
 
    public void storeRecordInHash(int recOffset, int hashOffset, int pagesize)
    {
       File hashfileStructure = new File(HASH_FNAME + pagesize + ".structure");
+	File hashfile = new File(HASH_FNAME + pagesize);
+	//fos2 = new FileOutputStream(hashfile);
       BufferedReader br = null;
       FileOutputStream fos = null;
       String tempString = "";
-	System.out.println("recOffset = " + recOffset);
+	FileInputStream fis2 = null;
+	FileOutputStream fos2 = null;
 
       try{
        byte[] bBucket = new byte[BUCKET_SIZE];
        byte[] bRecord = new byte[BUCKET_RECORD_SIZE];
 //TODO: PAD STRINGS AND APPEND A 'F' AROUND HERE SOMEHWEEHRJEA
        // Store recOFFset and hashOffset into store String
-       String hashOffsetString = Integer.toString(hashOffset);
+       String hashOffsetString = FULL_RECORD_INDICATOR + Integer.toString(hashOffset);
        String recOffsetString = Integer.toString(recOffset);
-	int hashOffsetLength = BUCKET_INDEX_SIZE - hashOffsetString.length;
+	int hashOffsetLength = BUCKET_INDEX_SIZE - hashOffsetString.length();
+	// Pad the index string.
        for(int i = 1; i<=hashOffsetLength;i++)
 	{
 		hashOffsetString += " ";
+	}
+	// Pad the heapfile offset string
+	for(int i = 1; i<= BUCKET_OFFSET_SIZE - recOffsetString.length(); i++)
+	{
+	   recOffsetString += " ";
 	}
        String storeString = hashOffsetString + recOffsetString;
       
@@ -264,7 +274,7 @@ public class hashload implements dbimpl
 
        FileInputStream fis = new FileInputStream(hashfileStructure);
 
-       File hashfile = new File(HASH_FNAME + pagesize);
+       //File hashfile = new File(HASH_FNAME + pagesize);
        fos = new FileOutputStream(hashfile);
 
 
@@ -282,21 +292,23 @@ public class hashload implements dbimpl
 	   }
 	   if(bucketCount == hashOffset)
 	   {
+		boolean inserted = false;
 	       // Read record and check if empty. Just scrapping it now for testing.
 	       for(int i = 1; i<=RECORDS_PER_BUCKET; i++)
 	       {
-
 	          fis.read(bRecord, 0, bRecord.length);
 		  tempString = new String(bRecord);
-		  if(tempString.charAt(0) == 'E')
+		System.out.println("tempString = " + tempString);
+		  if(tempString.charAt(0) == 'E' && inserted == false)
 		  {
                       System.out.println("Record " + i + " is empty. Inserting!    bucket size =  " + (BUCKET_SIZE - (BUCKET_RECORD_SIZE*i)));
 		      fos.write(record, 0, record.length);
 		      fis.read(readRemainder = new byte[BUCKET_SIZE - (BUCKET_RECORD_SIZE * i)], 0, readRemainder.length);
 		      fos.write(readRemainder, 0, readRemainder.length);
-		      break;
+		      inserted = true;
+		      
 		  }
-		  else
+		  if(tempString.charAt(0) == 'F')
 		  {
 		      System.out.println("record not empty, add going to next one");
 		  }
@@ -310,6 +322,22 @@ public class hashload implements dbimpl
 	       bucketCount ++;
 	   }
        }
+	
+	// Write data back into hash structure.
+	fis2 = new FileInputStream(hashfileStructure);
+	fos2 = new FileOutputStream(hashfile);
+	byte[] writeToStructure = new byte[BUCKET_SIZE];
+	isNextBucket = true;
+
+	   for(int i = 0; i<= BUCKET_QUANTITY; i++)
+	   {	
+		fis2.read(writeToStructure, 0, writeToStructure.length);
+
+		System.out.println("hope this works" + new String(writeToStructure));
+		fos2.write(writeToStructure, 0, writeToStructure.length);
+	   }
+	
+
      //  System.out.println("Completed");
        }
 	catch(Exception e){}

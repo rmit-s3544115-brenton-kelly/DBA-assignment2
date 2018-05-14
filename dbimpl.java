@@ -8,13 +8,15 @@ public interface dbimpl
    // Variables I have added:
    public static final String HASH_FNAME = "hash.";
    // Quantity of buckets used to store records.
-   public static final int BUCKET_QUANTITY = 800000;
+  // public static final int BUCKET_QUANTITY = 800000;
+
+   public static final int BUCKET_QUANTITY = 2;
    // Size of each bucket
    public static final int BUCKET_SIZE = 100;
    // Size of each index obtained from hashing.
-   public static final int BUCKET_INDEX_SIZE = 6;
+   public static final int BUCKET_INDEX_SIZE = 8;
    // Size of the offset value for Heap File.
-   public static final int BUCKET_OFFSET_SIZE = 14;
+   public static final int BUCKET_OFFSET_SIZE = 12;
 
    public static final int BUCKET_RECORD_SIZE = BUCKET_INDEX_SIZE + BUCKET_OFFSET_SIZE;
 
@@ -22,7 +24,7 @@ public interface dbimpl
    public static final int RECORDS_PER_BUCKET = 5;
 
    public static final String EMPTY_RECORD_INDICATOR = "E";
-
+   public static final String FULL_RECORD_INDICATOR = "F";
  
    public static final String HEAP_FNAME = "heap.";
    public static final String ENCODING = "utf-8";
