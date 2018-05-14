@@ -20,7 +20,6 @@ import java.util.Arrays;
 
 public class hashload implements dbimpl
 {
-
    // initialize
    public static void main(String args[])
    {
@@ -174,7 +173,7 @@ public class hashload implements dbimpl
 		     // Get the hash offset for the record
                      hashOffset = hashRecord(bRecord, name);
 
-                     storeRecordInHash(bRecord, hashOffset);
+                     storeRecordInHash(bRecord, hashOffset, pagesize);
 
 		     // Calculate the HeapFileOffset of the record.
 	             recOffset = pageCount * RECORD_SIZE;          
@@ -232,53 +231,58 @@ public class hashload implements dbimpl
       return hashOffset;
    }
 
-   public void storeRecordInHash(byte[] bRecord, int hashOffset)
+   public void storeRecordInHash(byte[] record, int hashOffset, int pagesize)
    {
-     
-
-	    byte[] bBucket = new byte[BUCKET_SIZE];
-	    byte[] bRecord = new byte[BUCKET_RECORD_SIZE];
-	    String testRecordString = "5555558888888888";
-	    byte[] testRecord = new byte[BUCKET_RECORD_SIZE];
-	    byte[] testRecordData = testRecordString.getBytes(ENCODING);
-	    System.arraycopy(testRecordData, 0, testRecord, 0, testRecordData.length);
-
-	    FileInputStream fis = new FileInputStream(hashfileStructure);
-
-	    File hashfile = new File(HASH_FNAME + pagesize);
-	    fos = new FileOutputStream(hashfile);
+      File hashfileStructure = new File(HASH_FNAME + pagesize + ".structure");
+      BufferedReader br = null;
+      FileOutputStream fos = null;
 
 
-	    // Read bucket by bucket until we reach desired bucket.
-	    boolean isNextBucket = true;
-	    int bucketCount = 1;
-	    int hashIndex = 2;
+      try{
+       byte[] bBucket = new byte[BUCKET_SIZE];
+       byte[] bRecord = new byte[BUCKET_RECORD_SIZE];
+       String testRecordString = "5555558888888888";
+       byte[] testRecord = new byte[BUCKET_RECORD_SIZE];
+       byte[] testRecordData = testRecordString.getBytes(ENCODING);
+       System.arraycopy(testRecordData, 0, testRecord, 0, testRecordData.length);
 
-	    while(isNextBucket)
-	    {
-		if((bucketCount) * BUCKET_SIZE == 300)
-		{
-		    System.out.println("last bucket");
-		    isNextBucket = false;
-		}
-		if(bucketCount == hashIndex)
-		{
-		    // Read record and check if empty. Just scrapping it now for testing.
-		    fis.read(bRecord, 0, bRecord.length);
+       FileInputStream fis = new FileInputStream(hashfileStructure);
+
+       File hashfile = new File(HASH_FNAME + pagesize);
+       fos = new FileOutputStream(hashfile);
+
+
+       // Read bucket by bucket until we reach desired bucket.
+       boolean isNextBucket = true;
+       int bucketCount = 1;
+       int hashIndex = 2;
+
+       while(isNextBucket)
+       {
+           if((bucketCount) * BUCKET_SIZE == 300)
+	   {
+	       System.out.println("last bucket");
+	       isNextBucket = false;
+	   }
+	   if(bucketCount == hashIndex)
+	   {
+	       // Read record and check if empty. Just scrapping it now for testing.
+	       fis.read(bRecord, 0, bRecord.length);
 		   	    
-		    fos.write(testRecord, 0, testRecord.length);
+	       fos.write(testRecord, 0, testRecord.length);
 		    
-		    bucketCount++;
-		}
-		else
-		{
-		    fis.read(bBucket, 0, bBucket.length);
-		    fos.write(bBucket, 0, bBucket.length);
-		    bucketCount ++;
-		}
-	    }
-	System.out.println("Completed");
-
+	       bucketCount++;
+	   }
+	   else
+	   {
+	       fis.read(bBucket, 0, bBucket.length);
+	       fos.write(bBucket, 0, bBucket.length);
+	       bucketCount ++;
+	   }
+       }
+       System.out.println("Completed");
+       }
+	catch(Exception e){}
 
  
    }
