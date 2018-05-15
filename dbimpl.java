@@ -1,28 +1,37 @@
 /**
  *  Database Systems - HEAP IMPLEMENTATION
+ *
+ *  *NOTE*
+ *  This file belongs to RMIT, Database Applications, Semester 1, 
+ *  Assignment 1 Sample Solution: dbimpl.java
+ *
+ *  It has been used in this assignment to assist
+ *  reading the data from the HEAP File created in Assignment 1
+ *
+ *  Note that this file has been modified with some additional
+ *  variables in order to implement the Hash File.
+ *  
  */
 
 public interface dbimpl
 {
 
    // Variables I have added:
+   // Name of hashfile.
    public static final String HASH_FNAME = "hash.";
    // Quantity of buckets used to store records.
-  // public static final int BUCKET_QUANTITY = 800000;
-
-   public static final int BUCKET_QUANTITY = 5;
-   // Size of each bucket
+   public static final int BUCKET_QUANTITY = 10000;
+   // Size of each bucket.
    public static final int BUCKET_SIZE = 100;
    // Size of each index obtained from hashing.
    public static final int BUCKET_INDEX_SIZE = 8;
    // Size of the offset value for Heap File.
    public static final int BUCKET_OFFSET_SIZE = 12;
-
+   // Total size of a Bucket.
    public static final int BUCKET_RECORD_SIZE = BUCKET_INDEX_SIZE + BUCKET_OFFSET_SIZE;
-
-   //
+   // Amount of records per bucket.
    public static final int RECORDS_PER_BUCKET = 5;
-
+   // Indicators to put at head of Bucket.
    public static final String EMPTY_RECORD_INDICATOR = "E";
    public static final String FULL_RECORD_INDICATOR = "F";
  
