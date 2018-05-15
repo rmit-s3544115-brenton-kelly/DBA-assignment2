@@ -1,0 +1,144 @@
+commit f20f5c4cf4505d9d98abfe39734c3a2db7073d1c
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Tue May 15 10:14:30 2018 +0000
+
+    Refactoring and commenting
+
+commit 7e7942da573ebbc73165b10a87e9511146c55a84
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 18:18:33 2018 +0000
+
+    na
+
+commit 2d704dd60abe57f53c2f38b9ad5ae89bac5ff0e7
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 18:01:54 2018 +0000
+
+    All file writing now works properly
+
+commit 25b7e6544491128c00dfb8047c58cc3d84f4140b
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 17:09:26 2018 +0000
+
+    bug fixing
+
+commit 96d1ccc31ac1f885b3c141a62b34f794fa0be632
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 15:36:01 2018 +0000
+
+    more fixes
+
+commit 7106985c503c8337336f3e870159e93e6cf458b7
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 14:31:43 2018 +0000
+
+    fixing
+
+commit 34161cafa787d4772782d6bf5ed3967ef50055a3
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 13:23:17 2018 +0000
+
+    Added tracker to keep track of records. This is used to calculate offset in heapfile.
+
+commit beae2d9b216ea05878236e6dcce6a3ffbbf662f7
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 12:38:54 2018 +0000
+
+    Fixing bugs
+
+commit da6abed9143d674f7c01b2d2ce2bb96359780ae9
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 11:06:43 2018 +0000
+
+    bug fixing
+
+commit 0ef53ef91d81feb1728ddfae9132a1cea8366af5
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 10:42:10 2018 +0000
+
+    removing bugs
+
+commit 260d370ceb647ac5c749dafec3f0b4f8d88ffbbd
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 10:15:49 2018 +0000
+
+    Moving some write to file code to new function.
+
+commit be8fbd092858b3ca0aa8b219009e04ab9511c689
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 10:00:58 2018 +0000
+
+    bug fixing
+
+commit ff1fe2be0f5e73fec08a03f4584f0a180b056ad9
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Mon May 14 09:39:53 2018 +0000
+
+    Slight commenting and refactoring.
+
+commit d1a7e6bd7294ae65f87400ea2012c853af2fa1e1
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Sun May 13 23:40:23 2018 +0000
+
+    optimised creating hash file structure.
+
+commit f6397b936e198b80ef93096e8dd80f616179f022
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Sun May 13 23:20:44 2018 +0000
+
+    more bug fixing
+
+commit 43ae9575fa173a4b27ea6279ad1e7692606127e0
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Sun May 13 22:43:38 2018 +0000
+
+    bug fixing
+
+commit ebd1d78ca7b0f005e2e45058876237802e3e96ac
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Sun May 13 21:50:07 2018 +0000
+
+    Added a header to every record indicating that it is empty. This doubles as an indicator showing if a bucket is empty.
+
+commit b3ad0795f4f36e2fca0faec34564e6d37bad2020
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Sun May 13 20:32:27 2018 +0000
+
+    Testing inserting data into structured hash file. The plan is to alternate reading and writing between 2 files, indexing a record each time.
+
+commit 8dd39511bb4b197f206b073807d125992d510b6d
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Sun May 13 17:31:30 2018 +0000
+
+    Added createHashFileStructure which populates the hash file with buckets
+
+commit 38019774c76581591f07c8e07b7441dd85a836a4
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Sun May 13 16:42:55 2018 +0000
+
+    Moved the final variables to the dbimpl.java file
+
+commit 4753ceefed66c0d551bd010c304063217fd0b4a5
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Sun May 13 16:23:21 2018 +0000
+
+    Implemented hashRecord function, which hashes the record by BN_NAME and returns the index.
+
+commit 57a9684b1d645b2c528ab0b12452a4b2e25ac441
+Author: Brenton Kelly <s3544115@student.rmit.edu.au>
+Date:   Sun May 13 14:28:51 2018 +0000
+
+    Added dbimpl.java from Assignment 1 sample solution. This will be used to read the data from the heapfile.
+    Removed dbload.java as this was an accidental upload.
+
+commit 5fd81e88e8fef35d002b6090d75feecbc465767d
+Author: Brenton Kelly <ec2-user@ip-10-88-170-212.ap-southeast-2.compute.internal>
+Date:   Sun May 13 14:19:04 2018 +0000
+
+    first commit
+
+commit 52d4f2330eeeffaaa8f91ef89c82aa1dc2b8a6e8
+Author: EC2 Default User <ec2-user@ip-10-88-170-212.ap-southeast-2.compute.internal>
+Date:   Sun May 13 14:15:02 2018 +0000
+
+    first commit
